@@ -24,7 +24,7 @@ window.addEventListener("load", function() {
          <li>Diameter: ${json[index].diameter}</li>
          <li>Star: ${json[index].star}</li>
          <li>Distance from Earth: ${json[index].distance}</li>
-         <li>Number of Moons: ${json[index].image}</li>
+         <li>Number of Moons: ${json[index].moons}</li>
          </ol>
          <img src="${json[index].image}">
          `
@@ -35,28 +35,56 @@ window.addEventListener("load", function() {
    form.addEventListener("submit", function(event) {
       event.preventDefault();
 
+      let ready = true;
       let items = document.getElementById('faultyItems');
 		let launchStatus = document.getElementById('launchStatus');
 		let fuelStatus = document.getElementById('fuelStatus');
 		let cargoStatus = document.getElementById('cargoStatus')
-		let ready = true;
 
-		let pilotName = document.querySelector("input[name=pilotName]");
-      let copilotName = document.querySelector("input[name=copilotName]");
-      let fuelLevel = document.querySelector("input[name=fuelLeve]");
-      let cargoMass = document.querySelector("input[name=cargoMass]");
+		let pilotName = document.querySelector("input[name=pilotName]").value;
+		let copilotName = document.querySelector("input[name=copilotName]").value;
+		let fuelLevel = document.querySelector("input[name=fuelLevel]").value;
+		let cargoMass = document.querySelector("input[name=cargoMass]").value;
 
-      if (pilotName === "" || copilotName === "" || fuelLevel === "" || isNaN(fuelLevel) || cargoMass === "" || isNaN(cargoMass)) {
-         alert("All fields required");
-         items.style.visibility = "hidden";
+		if (pilotName === "" || copilotName === "" || fuelLevel === '' || isNaN(fuelLevel) || cargoMass === '' || isNaN(cargoMass) ) {
 
-         launchStatus.style.color = "black";
-         launchStatus.innerHTML = "Awaiting Information Before Launch"
-      } else {
-         items.style.visibility = "visible";
+			alert("All fields are required!");
+			items.style.visibility = 'hidden';
 
-         this.document.getElementById("pilotStatus").innerHTML = `Pilot ${pilotName + " "}Ready`
-         this.document.getElementById("copilotStatus").innerHTML = `Co-Pilot ${copilotName + " "}Ready`
+			launchStatus.style.color = 'black';
+			launchStatus.innerHTML = 'Awaiting Information Before Launch';
+
+		} else {
+
+			items.style.visibility = 'visible';
+
+			document.getElementById('pilotStatus').innerHTML = `Pilot ${ pilotName + ' ' }Ready`
+			document.getElementById('copilotStatus').innerHTML = `Co-pilot ${ copilotName + ' ' }Ready`
+
+			if (fuelLevel < 10000) {
+				ready = false;
+				fuelStatus.innerHTML = 'Not enough fuel for launch. We have ${fuelLevelInput.value}L loaded and at least 10,000L are needed.';
+			} else {
+				fuelStatus.innerHTML = 'Fuel level high enough for launch';
+			}
+
+			if (cargoMass > 10000) {
+				ready = false;
+				cargoStatus.innerHTML = 'Too much mass for the shuttle to take off. Max load is 10,000kg and we have ${cargoMassInput.value}kg.';
+			} else {
+				cargoStatus.innerHTML = 'Cargo mass low enough for launch';
+			}
+
+			if (ready) {
+				launchStatus.style.color = 'green';
+				launchStatus.innerHTML = 'Shuttle is ready for launch';
+				retrieveData();
+			} else {
+				items.style.visibility = 'visible';
+				launchStatus.style.color = 'red';
+				launchStatus.innerHTML = 'Shuttle not ready for launch';
+			}
+
       }
 
    });
