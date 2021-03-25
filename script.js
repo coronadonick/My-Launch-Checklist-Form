@@ -35,8 +35,8 @@ window.addEventListener("load", function() {
    form.addEventListener("submit", function(event) {
       event.preventDefault();
 
-      let ready = true;
-      let items = document.getElementById('faultyItems');
+      	let ready = true;
+      	let items = document.getElementById('faultyItems');
 		let launchStatus = document.getElementById('launchStatus');
 		let fuelStatus = document.getElementById('fuelStatus');
 		let cargoStatus = document.getElementById('cargoStatus')
@@ -46,7 +46,9 @@ window.addEventListener("load", function() {
 		let fuelLevel = document.querySelector("input[name=fuelLevel]").value;
 		let cargoMass = document.querySelector("input[name=cargoMass]").value;
 
-		if (pilotName === "" || copilotName === "" || fuelLevel === '' || isNaN(fuelLevel) || cargoMass === '' || isNaN(cargoMass) ) {
+		
+
+		if (pilotName === "" || copilotName === "" || fuelLevel === '' || cargoMass === '') {
 
 			alert("All fields are required!");
 			items.style.visibility = 'hidden';
@@ -54,6 +56,10 @@ window.addEventListener("load", function() {
 			launchStatus.style.color = 'black';
 			launchStatus.innerHTML = 'Awaiting Information Before Launch';
 
+		} else if( !isNaN(pilotName) || !isNaN(copilotName) ) {
+			alert("Pilot and CoPilot cannot be numbers!")
+		} else if ( isNaN(fuelLevel) || isNaN(cargoMass) ) {
+			alert("Fuel level and cargo mass must be numbers!")
 		} else {
 
 			items.style.visibility = 'visible';
@@ -62,15 +68,17 @@ window.addEventListener("load", function() {
 			document.getElementById('copilotStatus').innerHTML = `Co-pilot ${ copilotName + ' ' }Ready`
 
 			if (fuelLevel < 10000) {
+				items.style.visibility = 'visible';
 				ready = false;
-				fuelStatus.innerHTML = 'Not enough fuel for launch. We have ${fuelLevelInput.value}L loaded and at least 10,000L are needed.';
+				fuelStatus.innerHTML = `Not enough fuel for the journey. We have ${fuelLevel}L and we need at least 10,000L.`;
 			} else {
 				fuelStatus.innerHTML = 'Fuel level high enough for launch';
 			}
 
 			if (cargoMass > 10000) {
+				items.style.visibility = 'visible';
 				ready = false;
-				cargoStatus.innerHTML = 'Too much mass for the shuttle to take off. Max load is 10,000kg and we have ${cargoMassInput.value}kg.';
+				cargoStatus.innerHTML = `Too much mass for the shuttle to take off. Max load is 10,000kg and we currently have ${cargoMass}kg.`;
 			} else {
 				cargoStatus.innerHTML = 'Cargo mass low enough for launch';
 			}
