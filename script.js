@@ -32,7 +32,7 @@ window.addEventListener("load", function() {
    });
 
 	let form = document.querySelector("form");
-   form.addEventListener("submit", function(event) {
+   	form.addEventListener("submit", function(event) {
       event.preventDefault();
 
       	let ready = true;
